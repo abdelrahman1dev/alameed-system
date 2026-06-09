@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1781030630484,
+      "tag": "0000_cool_karen_page",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1781038874474,
+      "tag": "0001_workable_chat",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1781038976646,
+      "tag": "0002_redundant_impossible_man",
+      "breakpoints": true
+    }
+  ]
+}
