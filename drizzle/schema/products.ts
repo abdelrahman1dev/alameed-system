@@ -5,7 +5,7 @@ import {
   real,
 } from 'drizzle-orm/sqlite-core';
 
-import { categories } from './categories';
+import { categories } from './categories.ts';
 
 export const products = sqliteTable('products', {
   id: integer('id').primaryKey({ autoIncrement: true }),

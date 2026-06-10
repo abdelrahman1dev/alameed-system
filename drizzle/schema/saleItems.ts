@@ -4,8 +4,8 @@ import {
   real,
 } from 'drizzle-orm/sqlite-core';
 
-import { sales } from './sales';
-import { products } from './products';
+import { sales } from './sales.ts';
+import { products } from './products.ts';
 
 export const saleItems = sqliteTable('sale_items', {
   id: integer('id').primaryKey({ autoIncrement: true }),
