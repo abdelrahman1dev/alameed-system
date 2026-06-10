@@ -24,7 +24,7 @@ export default function ProductsTable() {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="p-6" dir='ltr'>
       <div className="rounded-lg border bg-card shadow-sm">
         <Table>
           <TableCaption>List of all products</TableCaption>
