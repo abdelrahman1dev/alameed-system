@@ -35,12 +35,14 @@ export default function Header() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
-          <User size={18} className="text-white" />
-          <span className="text-sm text-white">
-            المدير
-          </span>
-        </div>
+        <Link href={'/login'}>
+          <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
+            <User size={18} className="text-white" />
+            <span className="text-sm text-white">
+              المدير
+            </span>
+          </div>
+        </Link>
         <Link href={'/'}>
           <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
             <ArrowLeftToLine size={18} className="text-white" />

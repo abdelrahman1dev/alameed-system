@@ -1,4 +1,4 @@
-import { db } from './../drizzle/db';
+import { db } from './../drizzle/db.ts';
 import {
   purchases,
   purchaseItems,
