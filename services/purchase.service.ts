@@ -3,7 +3,7 @@ import {
   purchases,
   purchaseItems,
   products,
-} from './../drizzle/schema';
+} from './../drizzle/schema/index.ts';
 import { eq, sql } from 'drizzle-orm';
 
 export async function getAllPurchases() {

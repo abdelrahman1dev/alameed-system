@@ -1,6 +1,5 @@
 import React from 'react'
-import ProductsTable from '../components/Table'
-
+import ProductsTable from '@/app/components/allProdTable'
 function page() {
   return (
     <div>
@@ -8,6 +7,5 @@ function page() {
     </div>
   )
 }
-
 
 export default page

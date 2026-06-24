@@ -7,3 +7,6 @@ export async function updateProduct(id:number , data: any) {
 export async function deleteProduct(id:number) {
   return await window.api.products['delete'](id);
 }
+export async function getProductsByCat(id:number) {
+  return await window.api.products.getByCategory(id);
+}

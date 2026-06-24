@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Calendar } from "lucide-react";
-import { Product } from "../types/products";
-import { getProducts } from "../api/queries/Products";
+import { Product } from "../../types/products";
+import { getProducts } from "../../api/queries/Products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { createSale } from "../api/queries/sale";
+import { createSale } from "../../api/queries/sale";
 
 import {
   Select,
@@ -27,7 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import SaleProductCard from "../components/sales/SaleProductCard";
+import SaleProductCard from "../../components/sales/SaleProductCard";
 
 type InvoiceItem = {
   id: number;

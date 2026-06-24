@@ -1,5 +1,5 @@
 import { db } from './../drizzle/db.ts';
-import { products } from './../drizzle/schema/index.ts';
+import { products , categories } from './../drizzle/schema/index.ts';
 import { eq } from 'drizzle-orm';
 
 export async function getAllProducts() {
@@ -13,6 +13,14 @@ export async function getProductById(id: number) {
     .where(eq(products.id, id));
 
   return product[0] ?? null;
+}
+
+
+export async function getProductsByCat(id: number) {
+  return await db
+    .select()
+    .from(products)
+    .where(eq(products.categoryId, id));
 }
 
 export async function createProduct(

@@ -24,6 +24,7 @@ import { Pencil, Save, Trash2, X } from "lucide-react";
 
 import {
   getProducts,
+  getProductsByCat,
   updateProduct,
   deleteProduct,
 } from "../api/queries/Products";
@@ -36,34 +37,34 @@ interface SortState {
 }
 
 const COLUMNS = [
-  { key: "id", label: "ID", editable: false, numeric: true },
+  { key: "id", label: "المعرف", editable: false, numeric: true },
 
-  { key: "name", label: "Name", editable: true, numeric: false },
+  { key: "name", label: "الاسم", editable: true, numeric: false },
 
-  { key: "sku", label: "SKU", editable: true, numeric: false },
+  { key: "sku", label: "رمز المنتج", editable: true, numeric: false },
 
-  { key: "barcode", label: "Barcode", editable: true, numeric: false },
+  { key: "barcode", label: "الباركود", editable: true, numeric: false },
 
-  { key: "quantity", label: "Quantity", editable: true, numeric: true },
+  { key: "quantity", label: "الكمية", editable: true, numeric: true },
 
-  { key: "buyPrice", label: "Buy Price", editable: true, numeric: true },
+  { key: "buyPrice", label: "سعر الشراء", editable: true, numeric: true },
 
-  { key: "sellPrice", label: "Sell Price", editable: true, numeric: true },
+  { key: "sellPrice", label: "سعر البيع", editable: true, numeric: true },
 
-  { key: "brand", label: "Brand", editable: true, numeric: false },
+  { key: "brand", label: "العلامة التجارية", editable: true, numeric: false },
 
   {
     key: "manufacturer",
-    label: "Manufacturer",
+    label: "الشركة المصنعة",
     editable: true,
     numeric: false,
   },
 
-  { key: "carBrand", label: "Car Brand", editable: true, numeric: false },
+  { key: "carBrand", label: "ماركة السيارة", editable: true, numeric: false },
 
-  { key: "carModel", label: "Car Model", editable: true, numeric: false },
+  { key: "carModel", label: "موديل السيارة", editable: true, numeric: false },
 
-  { key: "position", label: "Position", editable: true, numeric: false },
+  { key: "position", label: "الموضع", editable: true, numeric: false },
 ];
 
 function SortIcon({ direction }: { direction: SortDirection }) {
@@ -74,7 +75,7 @@ function SortIcon({ direction }: { direction: SortDirection }) {
   return <>⇅</>;
 }
 
-export default function ProductsTable() {
+export default function ProductsTable({ categoryId }: { categoryId?: number }) {
   const [products, setProducts] = useState<any[]>([]);
 
   const [sort, setSort] = useState<SortState>({
@@ -90,15 +91,35 @@ export default function ProductsTable() {
 
   const [saving, setSaving] = useState(false);
 
+  const [search, setSearch] = useState("");
+
   const [deleting, setDeleting] = useState(false);
+  const filteredProducts = products.filter((product) => {
+    const term = search.toLowerCase().trim();
+
+    return (
+      product.name?.toLowerCase().includes(term) ||
+      product.sku?.toLowerCase().includes(term) ||
+      product.brand?.toLowerCase().includes(term) ||
+      product.carBrand?.toLowerCase().includes(term) ||
+      product.carModel?.toLowerCase().includes(term) 
+    );
+  });
 
   useEffect(() => {
     loadProducts();
-  }, []);
+    console.log(products)
+  }, [categoryId , products]);
 
   async function loadProducts() {
     try {
-      const data = await getProducts();
+      let data;
+
+      if (categoryId) {
+        data = await getProductsByCat(categoryId);
+      } else {
+        data = await getProducts();
+      }
 
       setProducts(data);
     } catch (err) {
@@ -131,7 +152,7 @@ export default function ProductsTable() {
     });
   }
 
-  const sortedProducts = [...products].sort((a, b) => {
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (!sort.column || !sort.direction) return 0;
 
     const aVal = a[sort.column];
@@ -200,35 +221,27 @@ export default function ProductsTable() {
       const requests = [];
 
       for (const [idStr, values] of Object.entries(edits)) {
-
         const id = Number(idStr);
 
         const payload: Record<string, any> = {};
 
         Object.entries(values).forEach(([key, value]) => {
-
-          const column = COLUMNS.find(
-            c => c.key === key
-          );
+          const column = COLUMNS.find((c) => c.key === key);
 
           if (!column) return;
 
           payload[key] = column.numeric
-            ? value === ''
+            ? value === ""
               ? null
               : Number(value)
             : value;
         });
 
-        // IMPORTANT
-
         if (Object.keys(payload).length === 0) {
           continue;
         }
 
-        requests.push(
-          updateProduct(id, payload)
-        );
+        requests.push(updateProduct(id, payload));
       }
 
       await Promise.all(requests);
@@ -241,8 +254,6 @@ export default function ProductsTable() {
 
       setSelected(new Set());
     } catch (err) {
-      console.error("Save failed");
-
       console.error(err);
     } finally {
       setSaving(false);
@@ -264,13 +275,13 @@ export default function ProductsTable() {
   }
 
   function toggleSelectAll() {
-    if (selected.size === products.length) {
+    if (selected.size === filteredProducts.length) {
       setSelected(new Set());
 
       return;
     }
 
-    setSelected(new Set(products.map((p) => p.id)));
+    setSelected(new Set(filteredProducts.map((p) => p.id)));
   }
 
   async function handleDeleteSelected() {
@@ -292,16 +303,26 @@ export default function ProductsTable() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 text-right">
+      <h1 className="mb-6 text-3xl font-bold">
+        {categoryId ? "منتجات القسم" : "جميع المنتجات"}
+      </h1>
+
       <div className="mb-4 flex gap-2">
+        <Input
+          placeholder="Search by name or SKU..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
         {!editMode ? (
           <Button onClick={enterEditMode}>
             <Pencil className="mr-2 h-4 w-4" />
-            Edit
+            تعديل
           </Button>
         ) : (
           <>
-            <Badge>{Object.keys(edits).length} rows edited</Badge>
+            <Badge>تم تعديل {Object.keys(edits).length}</Badge>
 
             {selected.size > 0 && (
               <Button
@@ -310,33 +331,35 @@ export default function ProductsTable() {
                 disabled={deleting}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete ({selected.size})
+                حذف ({selected.size})
               </Button>
             )}
 
             <Button variant="outline" onClick={cancelEdit}>
               <X className="mr-2 h-4 w-4" />
-              Cancel
+              إلغاء
             </Button>
 
             <Button onClick={handleSave} disabled={saving}>
               <Save className="mr-2 h-4 w-4" />
 
-              {saving ? "Saving..." : "Save Changes"}
+              {saving ? "جاري الحفظ..." : "حفظ التغييرات"}
             </Button>
           </>
         )}
       </div>
 
       <Table>
-        <TableCaption>Products</TableCaption>
+        <TableCaption>جدول المنتجات</TableCaption>
 
         <TableHeader>
           <TableRow>
             {editMode && (
               <TableHead>
                 <Checkbox
-                  checked={selected.size === products.length}
+                  checked={
+                    products.length > 0 && selected.size === products.length
+                  }
                   onCheckedChange={toggleSelectAll}
                 />
               </TableHead>
@@ -360,7 +383,7 @@ export default function ProductsTable() {
         </TableHeader>
 
         <TableBody>
-          {sortedProducts.map((product) => (
+          {sortedProducts.map((product, i) => (
             <TableRow key={product.id}>
               {editMode && (
                 <TableCell>
