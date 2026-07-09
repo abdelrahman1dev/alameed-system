@@ -1,0 +1,53 @@
+{
+  "name": "elameed-system",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "abdelrahman dev",
+  "main": "./electron/main.ts",
+  "scripts": {
+    "frontend": "cd frontend && npm run dev -- -p 3000",
+    "electron": "electronmon .",
+    "dev": "concurrently \"npm run frontend\" \"wait-on http://localhost:3000 && npm run electron\"",
+    "frontend:build": "cd frontend && npm run build",
+    "electron:build": "tsc -p tsconfig.electron.json",
+    "dist": "npm run frontend:build && npm run electron:build && electron-builder"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.3",
+    "drizzle-orm": "^0.45.2",
+    "electron-store": "^8.2.0",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.9.2",
+    "concurrently": "^10.0.3",
+    "drizzle-kit": "^0.31.10",
+    "electron": "^22.3.27",
+    "electron-builder": "^24.13.3",
+    "electronmon": "^2.0.4",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "wait-on": "^9.0.10"
+  },
+  "build": {
+    "appId": "com.elameed.system",
+    "productName": "Elameed System",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "frontend/out/**/*",
+      "database/**/*"
+    ],
+    "extraMetadata": {
+      "main": "dist-electron/electron/main.js"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import { db } from '../drizzle/db.ts';
-import { users } from '../drizzle/schema/index.ts';
+import { db } from '../drizzle/db';
+import { users } from '../drizzle/schema/index';
 import { and, eq } from 'drizzle-orm';
 export async function login(
   username: string,

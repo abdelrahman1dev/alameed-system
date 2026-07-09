@@ -5,23 +5,20 @@ import {
   createProduct,
   deleteProduct,
   getProductsByCat
-} from "../services/product.service.ts";
+} from "../services/product.service";
 import path from "node:path";
-import { createSale } from "../services/sale.service.ts";
+import { createSale } from "../services/sale.service";
 import {
   createPurchase,
   getAllPurchases,
   getPurchaseById,
-} from "../services/purchase.service.ts";
-import { login } from "../services/auth.service.ts";
-import { createCategory, deleteCategory, getAllCategories } from "../services/category.service.ts";
-import { getDashboardStats } from "../services/dashboard.service.ts";
+} from "../services/purchase.service";
+import { login } from "../services/auth.service";
+import { createCategory, deleteCategory, getAllCategories } from "../services/category.service";
+import { getDashboardStats } from "../services/dashboard.service";
 
-import { fileURLToPath } from "node:url";
-import { store } from "./store.ts";
+import { store } from "./store";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 type Session = {
   id: number;

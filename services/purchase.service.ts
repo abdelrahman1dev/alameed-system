@@ -1,9 +1,9 @@
-import { db } from './../drizzle/db.ts';
+import { db } from './../drizzle/db';
 import {
   purchases,
   purchaseItems,
   products,
-} from './../drizzle/schema/index.ts';
+} from './../drizzle/schema/index';
 import { eq, sql } from 'drizzle-orm';
 
 export async function getAllPurchases() {

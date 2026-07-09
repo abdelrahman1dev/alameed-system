@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+
+    "outDir": "dist-electron",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "ignoreDeprecations": "6.0",
+    "module": "CommonJS",
+    "moduleResolution": "Node"
+  },
+  "include": ["electron/**/*.ts", "services/**/*.ts", "drizzle/**/*.ts"]
+}

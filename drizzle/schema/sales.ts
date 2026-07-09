@@ -5,7 +5,7 @@ import {
   real,
 } from 'drizzle-orm/sqlite-core';
 
-import { users } from './users.ts';
+import { users } from './users';
 
 export const sales = sqliteTable('sales', {
   id: integer('id').primaryKey({ autoIncrement: true }),

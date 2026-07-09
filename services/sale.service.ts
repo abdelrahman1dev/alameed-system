@@ -1,5 +1,5 @@
-import { db } from "./../drizzle/db.ts";
-import { sales, saleItems, products } from "./../drizzle/schema/index.ts";
+import { db } from "./../drizzle/db";
+import { sales, saleItems, products } from "./../drizzle/schema/index";
 import { eq, sql } from "drizzle-orm";
 
 export async function getAllSales() {

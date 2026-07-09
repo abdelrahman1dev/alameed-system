@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 
-import { db } from "../drizzle/db.ts";
-import { products, purchases, sales } from "../drizzle/schema/index.ts";
+import { db } from "../drizzle/db";
+import { products, purchases, sales } from "../drizzle/schema/index";
 
 export async function getDashboardStats() {
   const productCount = await db.select({ count: sql<number>`count(*)` }).from(products);
