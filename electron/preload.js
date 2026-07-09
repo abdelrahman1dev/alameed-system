@@ -30,5 +30,10 @@ contextBridge.exposeInMainWorld("api", {
   },
   categories: {
     getAll: () => ipcRenderer.invoke("categories:getAll"),
+    create: (data) => ipcRenderer.invoke("categories:create", data),
+    delete: (id) => ipcRenderer.invoke("categories:delete", id),
+  },
+  dashboard: {
+    getStats: () => ipcRenderer.invoke("dashboard:getStats"),
   }
 });

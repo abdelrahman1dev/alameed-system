@@ -61,7 +61,9 @@ export function AuthProvider({
   };
 
   useEffect(() => {
-    refreshSession();
+    // Session is restored from Electron's persisted store once on app startup.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void refreshSession();
   }, []);
 
   const logout = async () => {

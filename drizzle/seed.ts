@@ -1,10 +1,10 @@
-import { db } from './db';
+import { db } from './db.js';
 
 import {
   categories,
   users,
   products,
-} from './schema';
+} from './schema/index.js';
 
 async function seed() {
   console.log('🌱 Seeding database...');

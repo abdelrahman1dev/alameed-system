@@ -14,13 +14,40 @@ import {
   getPurchaseById,
 } from "../services/purchase.service.ts";
 import { login } from "../services/auth.service.ts";
-import { getAllCategories , getCategoryById } from "../services/category.service.ts";
+import { createCategory, deleteCategory, getAllCategories } from "../services/category.service.ts";
+import { getDashboardStats } from "../services/dashboard.service.ts";
 
 import { fileURLToPath } from "node:url";
 import { store } from "./store.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+type Session = {
+  id: number;
+  username: string;
+  role: string;
+};
+
+function requireSession() {
+  const session = store.get("session") as Session | null;
+
+  if (!session) {
+    throw new Error("User is not logged in");
+  }
+
+  return session;
+}
+
+function requireRole(roles: string[]) {
+  const session = requireSession();
+
+  if (!roles.includes(session.role)) {
+    throw new Error("You do not have permission to perform this action");
+  }
+
+  return session;
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -32,7 +59,13 @@ function createWindow() {
     },
   });
 
+  const isDev = !app.isPackaged;
+
+if (isDev) {
   win.loadURL("http://localhost:3000");
+} else {
+  win.loadFile(path.join(app.getAppPath(), "frontend/out/index.html"));
+}
 }
 
 app.whenReady().then(createWindow);
@@ -40,7 +73,6 @@ app.whenReady().then(createWindow);
 // product functions
 
 ipcMain.handle("products:getAll", async () => {
-  console.log("IPC CALLED");
   return await getAllProducts();
 });
 
@@ -48,6 +80,7 @@ ipcMain.handle(
   "products:create",
 
   async (_, data) => {
+    requireRole(["admin", "manager"]);
     return await createProduct(data);
   },
 );
@@ -55,6 +88,7 @@ ipcMain.handle(
   "products:update",
 
   async (_, id, data) => {
+    requireRole(["admin", "manager"]);
     return await updateProduct(id, data);
   },
 );
@@ -62,6 +96,7 @@ ipcMain.handle(
   "products:delete",
 
   async (_, id) => {
+    requireRole(["admin"]);
     return await deleteProduct(id);
   },
 );
@@ -98,22 +133,28 @@ ipcMain.handle("invoice:print", async (event) => {
 
 // create a sale
 
-ipcMain.handle(
-  "sales:create",
+ipcMain.handle("sales:create", async (_, sale, items) => {
+  const session = requireSession();
 
-  async (_, sale, items) => {
-    return await createSale(sale, items);
-  },
-);
+  return await createSale(
+    {
+      ...sale,
+      createdBy: session.id,
+    },
+    items,
+  );
+});
 
 
 // purchase functions
 ipcMain.handle(
   "purchases:create",
 
-  async (_, {purchase, items}) => {
-    return await createPurchase(purchase, items);
-  },
+  async (_, purchase, items) => {
+    const session = requireRole(["admin", "manager"]);
+
+    return await createPurchase({ ...purchase, createdBy: session.id }, items);
+  }
 );
 ipcMain.handle(
   "purchases:getId",
@@ -179,6 +220,18 @@ ipcMain.handle(
   }
 
 )
+ipcMain.handle("categories:create", async (_, data) => {
+  requireRole(["admin", "manager"]);
+
+  return await createCategory(data);
+});
+
+ipcMain.handle("categories:delete", async (_, id) => {
+  requireRole(["admin"]);
+
+  return await deleteCategory(id);
+});
+
 ipcMain.handle(
   "products:getByCategory",
   async (_,id) => {
@@ -186,3 +239,9 @@ ipcMain.handle(
   }
 
 )
+
+ipcMain.handle("dashboard:getStats", async () => {
+  requireSession();
+
+  return await getDashboardStats();
+});

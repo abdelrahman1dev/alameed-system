@@ -15,8 +15,6 @@ export default function ProtectedLayout({
 
   const { user, loading } = useAuth();
 
-  console.log(user)
-
   useEffect(() => {
     if (!loading && !user) {
       router.replace("/login");
@@ -26,7 +24,7 @@ export default function ProtectedLayout({
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex h-[70vh] items-center justify-center">جاري التحميل...</div>;
   }
 
   if (!user) {

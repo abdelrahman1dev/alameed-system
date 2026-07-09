@@ -1,5 +1,5 @@
-import { db } from './db';
-import { products } from './schema';
+import { db } from './db.js';
+import { products } from './schema/index.js';
 import {eq} from 'drizzle-orm';
 async function main() {
   // CREATE

@@ -1,17 +1,9 @@
 import Store from "electron-store";
 
-type User = {
-  id: number;
-
-  username: string;
-
-  role: string;
-};
-
 type Session = {
-  user: User;
-
-  expiresAt: number;
+  id: number;
+  username: string;
+  role: string;
 };
 
 export const store = new Store<{

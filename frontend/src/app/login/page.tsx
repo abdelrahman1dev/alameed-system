@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 
-function page() {
+function Page() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { refreshSession } = useAuth();
   const { setUser } = useAuth();
 
   async function handleLogin(e: React.FormEvent) {
@@ -55,7 +54,7 @@ return (
           </label>
 
           <input
-            type="text"
+            type="password"
             onChange={(e) => setUsername(e.target.value)}
             placeholder="اسم المستخدم"
             className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
@@ -87,4 +86,4 @@ return (
 );
 }
 
-export default page;
+export default Page;

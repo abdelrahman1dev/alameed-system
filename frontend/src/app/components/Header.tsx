@@ -130,20 +130,18 @@ export default function Header() {
           </>
         )}
 
-        <Link
-          href="/"
-          className="
-            flex items-center gap-2
-            rounded-xl bg-white/10
-            px-3 py-2
-            transition hover:bg-white/20
-          "
+        <button
+          onClick={() => {
+            if (window.history.length > 1) {
+              router.back();
+            } else {
+              router.push("/");
+            }
+          }}
+          className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 transition hover:bg-white/20"
         >
-          <ArrowLeftToLine
-            size={18}
-            className="text-white"
-          />
-        </Link>
+          <ArrowLeftToLine size={18} className="text-white" />
+        </button>
       </div>
     </header>
   );

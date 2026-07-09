@@ -1,12 +1,12 @@
-import React from 'react'
+import Link from 'next/link'
 
-function notFound() {
+function NotFound() {
   return (
     <div>
       not found page 
-      <a href="/"> go home</a>
+      <Link href="/">go home</Link>
     </div>
   )
 }
 
-export default notFound
+export default NotFound

@@ -1,16 +1,30 @@
 export { };
 
+import type {
+  Category,
+  DashboardStats,
+  Product,
+  ProductInput,
+  Purchase,
+  PurchaseInput,
+  PurchaseItemInput,
+  Sale,
+  SaleInput,
+  SaleItemInput,
+  UserSession,
+} from "./api";
+
 declare global {
   interface Window {
     api: {
       // products
 
       products: {
-        getAll: () => Promise<any[]>;
-        create: (data: any) => Promise<any>;
-        update: (id: number, data: any) => Promise<any>;
-        delete: (id: number) => Promise<any>;
-        getByCategory: (id: number) => Promise<any>;
+        getAll: () => Promise<Product[]>;
+        create: (data: ProductInput) => Promise<Product>;
+        update: (id: number, data: Partial<ProductInput>) => Promise<Product | null>;
+        delete: (id: number) => Promise<Product | null>;
+        getByCategory: (id: number) => Promise<Product[]>;
       };
 
       //print
@@ -21,25 +35,30 @@ declare global {
 
       // sales
       sales: {
-        create: (sale: any, items: any[]) => Promise<any>;
+        create: (sale: SaleInput, items: SaleItemInput[]) => Promise<Sale>;
       };
 
       // purchases
       purchases: {
-        getAll: () => Promise<any[]>;
-        getById: (id: number) => Promise<any>;
-        create: (purchase: any, items: any[]) => Promise<any>;
+        getAll: () => Promise<Purchase[]>;
+        getById: (id: number) => Promise<Purchase | null>;
+        create: (purchase: PurchaseInput, items: PurchaseItemInput[]) => Promise<Purchase>;
       };
       auth: {
-        login: (username: string, password: string) => Promise<any>;
+        login: (username: string, password: string) => Promise<UserSession | null>;
 
-        getSession: () => Promise<any>;
+        getSession: () => Promise<UserSession | null>;
 
         logout: () => Promise<boolean>;
       };
       categories: {
-        getAll: () => promise<any>;
-      }
+        getAll: () => Promise<Category[]>;
+        create: (data: Omit<Category, "id">) => Promise<Category>;
+        delete: (id: number) => Promise<Category | null>;
+      };
+      dashboard: {
+        getStats: () => Promise<DashboardStats>;
+      };
     };
   }
 }

@@ -5,11 +5,7 @@ import {
   Package,
   ShoppingCart,
   Users,
-  Receipt,
-  Wallet,
-  BarChart3,
   Truck,
-  Settings,
 } from 'lucide-react';
 
 const menuItems = [
@@ -32,42 +28,18 @@ const menuItems = [
     href: '/products',
   },
   {
-    title: 'العملاء',
-    description: 'إدارة العملاء',
+    title: 'الملف الشخصي',
+    description: 'بيانات المستخدم والصلاحية',
     icon: Users,
-    href: '/customers',
-  },
-  {
-    title: 'الفواتير',
-    description: 'عرض وإدارة الفواتير',
-    icon: Receipt,
-    href: '/invoices',
-  },
-  {
-    title: 'المصروفات',
-    description: 'إدارة المصروفات',
-    icon: Wallet,
-    href: '/expenses',
-  },
-  {
-    title: 'التقارير',
-    description: 'تقارير المبيعات والمخزون',
-    icon: BarChart3,
-    href: '/reports',
-  },
-  {
-    title: 'الإعدادات',
-    description: 'إعدادات النظام',
-    icon: Settings,
-    href: '/settings',
+    href: '/user',
   },
 ];
 
 export default function Menu() {
   return (
     <div className="p-6">
-      <h1 className="mb-6 text-3xl font-bold text-slate-800">
-        لوحة التحكم
+      <h1 className="mb-6 text-2xl font-bold text-slate-800">
+        العمليات السريعة
       </h1>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

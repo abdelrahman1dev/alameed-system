@@ -1,11 +1,17 @@
-import React from 'react'
+"use client";
+
 import ProductsTable from '@/app/components/allProdTable'
-function page() {
+import { useSearchParams } from 'next/navigation';
+
+function Page() {
+  const searchParams = useSearchParams();
+  const categoryId = Number(searchParams.get('categoryId')) || undefined;
+
   return (
     <div>
-      <ProductsTable />
+      <ProductsTable categoryId={categoryId} />
     </div>
   )
 }
 
-export default page
+export default Page

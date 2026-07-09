@@ -22,7 +22,13 @@ export async function createSale(
   items: CreateSaleItem[],
 ) {
   return db.transaction(async (tx) => {
-    const createdSale = await tx.insert(sales).values(sale).returning();
+    const createdSale = await tx
+      .insert(sales)
+      .values({
+        ...sale,
+        soldAt: new Date().toISOString(),
+      })
+      .returning();
 
     const saleId = createdSale[0].id;
 

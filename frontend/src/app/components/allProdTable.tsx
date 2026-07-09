@@ -28,15 +28,23 @@ import {
   updateProduct,
   deleteProduct,
 } from "../api/queries/Products";
+import type { Product, ProductInput } from "@/types/api";
 
 type SortDirection = "asc" | "desc" | null;
 
 interface SortState {
-  column: string | null;
+  column: keyof Product | null;
   direction: SortDirection;
 }
 
-const COLUMNS = [
+type Column = {
+  key: keyof Product;
+  label: string;
+  editable: boolean;
+  numeric: boolean;
+};
+
+const COLUMNS: Column[] = [
   { key: "id", label: "المعرف", editable: false, numeric: true },
 
   { key: "name", label: "الاسم", editable: true, numeric: false },
@@ -76,7 +84,7 @@ function SortIcon({ direction }: { direction: SortDirection }) {
 }
 
 export default function ProductsTable({ categoryId }: { categoryId?: number }) {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   const [sort, setSort] = useState<SortState>({
     column: null,
@@ -85,7 +93,7 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
 
   const [editMode, setEditMode] = useState(false);
 
-  const [edits, setEdits] = useState<Record<number, any>>({});
+  const [edits, setEdits] = useState<Record<number, Partial<Record<keyof ProductInput, string | number | null>>>>({});
 
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
@@ -107,9 +115,24 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
   });
 
   useEffect(() => {
-    loadProducts();
-    console.log(products)
-  }, [categoryId , products]);
+    async function loadProducts() {
+      try {
+        let data;
+
+        if (categoryId) {
+          data = await getProductsByCat(categoryId);
+        } else {
+          data = await getProducts();
+        }
+
+        setProducts(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    void loadProducts();
+  }, [categoryId]);
 
   async function loadProducts() {
     try {
@@ -127,7 +150,7 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
     }
   }
 
-  function handleSort(column: string) {
+  function handleSort(column: keyof Product) {
     if (editMode) return;
 
     setSort((prev) => {
@@ -198,11 +221,11 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
     setSelected(new Set());
   }
 
-  function getCellValue(product: any, key: string) {
+  function getCellValue(product: Product, key: keyof ProductInput) {
     return edits[product.id]?.[key] ?? product[key] ?? "";
   }
 
-  function handleCellChange(id: number, key: string, value: any) {
+  function handleCellChange(id: number, key: keyof ProductInput, value: string) {
     setEdits((prev) => ({
       ...prev,
 
@@ -223,18 +246,21 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
       for (const [idStr, values] of Object.entries(edits)) {
         const id = Number(idStr);
 
-        const payload: Record<string, any> = {};
+        const payload: Partial<ProductInput> = {};
 
         Object.entries(values).forEach(([key, value]) => {
-          const column = COLUMNS.find((c) => c.key === key);
+          const typedKey = key as keyof ProductInput;
+          const column = COLUMNS.find((c) => c.key === typedKey);
 
           if (!column) return;
 
-          payload[key] = column.numeric
-            ? value === ""
-              ? null
-              : Number(value)
-            : value;
+          if (column.numeric) {
+            if (value === "") return;
+            (payload[typedKey] as number) = Number(value);
+            return;
+          }
+
+          (payload[typedKey] as string | null) = value === "" ? null : String(value);
         });
 
         if (Object.keys(payload).length === 0) {
@@ -383,7 +409,7 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
         </TableHeader>
 
         <TableBody>
-          {sortedProducts.map((product, i) => (
+          {sortedProducts.map((product) => (
             <TableRow key={product.id}>
               {editMode && (
                 <TableCell>
@@ -401,9 +427,9 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
                   {editMode ? (
                     <Input
                       type={col.numeric ? "number" : "text"}
-                      value={getCellValue(product, col.key)}
+                      value={getCellValue(product, col.key as keyof ProductInput)}
                       onChange={(e) =>
-                        handleCellChange(product.id, col.key, e.target.value)
+                        handleCellChange(product.id, col.key as keyof ProductInput, e.target.value)
                       }
                     />
                   ) : col.key === "buyPrice" ? (

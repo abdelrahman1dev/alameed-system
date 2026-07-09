@@ -24,9 +24,18 @@ export async function createPurchase(
   items: (typeof purchaseItems.$inferInsert)[]
 ) {
   return db.transaction(async (tx) => {
+    const totalAmount = items.reduce(
+      (sum, item) => sum + item.quantity * item.unitPrice,
+      0,
+    );
+
     const createdPurchase = await tx
       .insert(purchases)
-      .values(purchase)
+      .values({
+        ...purchase,
+        totalAmount,
+        purchasedAt: new Date().toISOString(),
+      })
       .returning();
 
     const purchaseId = createdPurchase[0].id;

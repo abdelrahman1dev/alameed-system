@@ -1,6 +1,11 @@
+node_modules/
+dist-electron/
+release/
+
 package-lock.json
 package.json
 tsconfig.electron.json
 drizzle.config.ts
-dist-electron/
-release/
+
+.vscode/
+.env

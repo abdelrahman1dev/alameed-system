@@ -6,7 +6,11 @@ export async function login(
   password: string
 ) {
   const result = await db
-    .select()
+    .select({
+      id: users.id,
+      username: users.username,
+      role: users.role,
+    })
     .from(users)
     .where(
       and(

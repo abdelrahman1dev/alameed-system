@@ -1,7 +1,1 @@
-export type Product = {
-  id: number;
-  name: string;
-  sku: string;
-  quantity: number;
-  sellPrice: number;
-};
+export type { Product } from "@/types/api";

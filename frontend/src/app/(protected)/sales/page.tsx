@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createSale } from "../../api/queries/sale";
+import { toast } from "sonner";
 
 import {
   Select,
@@ -46,9 +47,11 @@ export default function Page() {
   const [discount, setDiscount] = useState(0);
   const [notes, setNotes] = useState("");
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const [invoiceNumber, setInvoiceNumber] = useState("");
-  const [today, setToday] = useState("");
+  const [invoiceSeq, setInvoiceSeq] = useState(1);
+  const [today] = useState(() => new Date().toLocaleDateString("ar-EG"));
+  const invoiceNumber = `INV-${invoiceSeq.toString().padStart(5, "0")}`;
 
   const [items, setItems] = useState<InvoiceItem[]>([
     {
@@ -59,11 +62,6 @@ export default function Page() {
   ]);
 
   useEffect(() => {
-    setInvoiceNumber(`INV-${Date.now()}`);
-    setToday(new Date().toLocaleDateString("ar-EG"));
-  }, []);
-
-  useEffect(() => {
     async function load() {
       const data = await getProducts();
       setProducts(data);
@@ -71,7 +69,6 @@ export default function Page() {
     load();
   }, []);
 
-  // selectedIds now excludes null values properly (already did, kept as-is)
   const selectedIds = items
     .map((i) => i.productId)
     .filter((id): id is number => id !== null);
@@ -88,15 +85,14 @@ export default function Page() {
   };
 
   async function handleSaveSale() {
+    if (!canSave || saving) return;
+
+    setSaving(true);
+
     try {
       const salePayload = {
-        type: saleType,
         customerName: saleType === "customer" ? customerName : null,
-        customerPhone: saleType === "customer" ? customerPhone : null,
-        discount,
-        subtotal,
-        total,
-        notes,
+        totalAmount: total,
       };
 
       const itemsPayload = items
@@ -106,11 +102,22 @@ export default function Page() {
           quantity: i.quantity,
         }));
 
-      const result = await createSale(salePayload,itemsPayload,);
-      console.log(result);
+      await createSale(salePayload, itemsPayload);
+
+      toast.success("تم حفظ فاتورة البيع وتحديث المخزون");
+      setItems([{ id: 1, productId: null, quantity: 1 }]);
+      setCustomerName("");
+      setCustomerPhone("");
+      setDiscount(0);
+      setNotes("");
+      setInvoiceSeq((value) => value + 1);
+      setProducts(await getProducts());
       setReceiptOpen(false);
     } catch (error) {
       console.error(error);
+      toast.error(error instanceof Error ? error.message : "تعذر حفظ فاتورة البيع");
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -139,18 +146,20 @@ export default function Page() {
   }, 0);
 
   const total = Math.max(subtotal - discount, 0);
+  const profit = items.reduce((acc, item) => {
+    const product = products.find((p) => p.id === item.productId);
+    if (!product) return acc;
+    return acc + (product.sellPrice - product.buyPrice) * item.quantity;
+  }, 0) - discount;
 
   const canSave =
     items.some((i) => i.productId) &&
     (saleType === "customer" ? customerName.trim() !== "" : true);
 
-  // Bug fix 3: error handling for print
   const handlePrint = async () => {
     try {
       const success = await window.api.invoice.print();
-      if (success) {
-        console.log("printed");
-      }
+      if (!success) toast.error("تعذرت الطباعة");
     } catch (err) {
       console.error("Print failed:", err);
     }
@@ -225,8 +234,6 @@ export default function Page() {
             index={index}
             item={item}
             products={products}
-            // Bug fix 1: exclude current item's own productId from selectedIds
-            // so the current row can still display/select its own product
             selectedIds={selectedIds.filter((id) => id !== item.productId)}
             updateItem={updateItem}
             removeProduct={removeProduct}
@@ -245,7 +252,6 @@ export default function Page() {
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>الخصم</Label>
-              {/* Bug fix 2: clamp discount to >= 0 */}
               <Input
                 type="number"
                 min={0}
@@ -274,6 +280,10 @@ export default function Page() {
             <div className="flex justify-between text-3xl font-bold">
               <span>الإجمالي النهائي</span>
               <span>{total}</span>
+            </div>
+            <div className="flex justify-between text-lg text-green-700">
+              <span>الربح المتوقع</span>
+              <span>{profit}</span>
             </div>
           </div>
 
@@ -363,7 +373,9 @@ export default function Page() {
                 طباعة
               </Button>
 
-              <Button className="w-full" onClick={handleSaveSale}>حفظ بقاعدة البيانات</Button>
+              <Button className="w-full" onClick={handleSaveSale} disabled={saving}>
+                {saving ? "جاري الحفظ..." : "حفظ بقاعدة البيانات"}
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
