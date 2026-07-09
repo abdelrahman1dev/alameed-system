@@ -39,24 +39,24 @@ export default function Header() {
       className="
         sticky top-0 z-50
         flex items-center justify-between
-        bg-blue-600 px-6 py-4
+        bg-foreground px-6 py-4
         shadow-md
       "
     >
       <div className="flex items-center gap-3">
         <div className="rounded-xl bg-white/15 p-2">
           <Car
-            className="text-white"
+            className="text-primary"
             size={28}
           />
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="text-2xl font-bold text-primary">
             مركز العميد
           </h1>
 
-          <p className="text-sm text-blue-100">
+          <p className="text-sm text-opacity">
             نظام إدارة قطع غيار السيارات
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function Header() {
 
       <div className="flex items-center gap-3">
         <div className="hidden md:block">
-          <p className="text-sm text-blue-100">
+          <p className="text-sm text-opacity">
             {new Date().toLocaleDateString(
               "ar-EG"
             )}
@@ -76,9 +76,9 @@ export default function Header() {
             href="/login"
             className="
               flex items-center gap-2
-              rounded-xl bg-white/10
+              rounded-xl bg-chart-2
               px-3 py-2
-              transition hover:bg-white/20
+              transition hover:bg-chart-3
             "
           >
             <User
@@ -96,9 +96,9 @@ export default function Header() {
               href="/user"
               className="
                 flex items-center gap-2
-                rounded-xl bg-white/10
+                rounded-xl bg-chart-2
                 px-3 py-2
-                transition hover:bg-white/20
+                transition hover:bg-chart-3
               "
             >
               <User
@@ -115,7 +115,7 @@ export default function Header() {
               onClick={handleLogout}
               className="
                 flex items-center gap-2
-                rounded-xl bg-red-500
+                rounded-xl bg-destructive
                 px-3 py-2
                 text-white
                 transition hover:bg-red-600
@@ -138,7 +138,7 @@ export default function Header() {
               router.push("/");
             }
           }}
-          className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 transition hover:bg-white/20"
+          className="flex items-center gap-2 rounded-xl bg-chart-2 px-3 py-2 transition hover:bg-chart-3"
         >
           <ArrowLeftToLine size={18} className="text-white" />
         </button>

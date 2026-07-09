@@ -93,7 +93,7 @@ function Metric({ title, value, icon }: { title: string; value: string | number;
           <p className="text-sm text-muted-foreground">{title}</p>
           <p className="mt-2 text-2xl font-bold">{value}</p>
         </div>
-        <div className="rounded-xl bg-blue-100 p-3 text-blue-700">{icon}</div>
+        <div className="rounded-xl bg-[#dbeafe] p-3 text-[#1447e6]">{icon}</div>
       </CardContent>
     </Card>
   );

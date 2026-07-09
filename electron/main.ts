@@ -18,6 +18,11 @@ import { createCategory, deleteCategory, getAllCategories } from "../services/ca
 import { getDashboardStats } from "../services/dashboard.service";
 
 import { store } from "./store";
+import http from "node:http";
+import handler from "serve-handler";
+
+let server: http.Server;
+
 
 
 type Session = {
@@ -46,26 +51,55 @@ function requireRole(roles: string[]) {
   return session;
 }
 
-function createWindow() {
+function createWindow(url: string) {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: path.join(__dirname, "../../assets/icon.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
     },
   });
 
-  const isDev = !app.isPackaged;
-
-if (isDev) {
-  win.loadURL("http://localhost:3000");
-} else {
-  win.loadFile(path.join(app.getAppPath(), "frontend/out/index.html"));
-}
+  win.loadURL(url);
 }
 
-app.whenReady().then(createWindow);
+
+app.whenReady().then(() => {
+  if (app.isPackaged) {
+    const publicDir = path.join(process.resourcesPath, "frontend");
+
+    server = http.createServer((req, res) =>
+      handler(req, res, {
+        public: publicDir,
+        cleanUrls: true,
+        rewrites: [
+          {
+            source: "**",
+            destination: "/index.html",
+          },
+        ],
+      })
+    );
+
+    server.listen(3131, () => {
+      createWindow("http://127.0.0.1:3131");
+    });
+  } else {
+    createWindow("http://localhost:3000");
+  }
+});
+
+app.on("window-all-closed", () => {
+  server?.close();
+
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
+
+
 
 // product functions
 
@@ -173,7 +207,7 @@ ipcMain.handle(
 ipcMain.handle(
   "auth:login",
 
-  async (_,username, password ) => {
+  async (_, username, password) => {
     const user = await login(
       username,
       password
@@ -231,7 +265,7 @@ ipcMain.handle("categories:delete", async (_, id) => {
 
 ipcMain.handle(
   "products:getByCategory",
-  async (_,id) => {
+  async (_, id) => {
     return await getProductsByCat(id)
   }
 

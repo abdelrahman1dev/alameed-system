@@ -38,7 +38,7 @@ const menuItems = [
 export default function Menu() {
   return (
     <div className="p-6">
-      <h1 className="mb-6 text-2xl font-bold text-slate-800">
+      <h1 className="mb-6 text-2xl font-bold text-[#1d293d]">
         العمليات السريعة
       </h1>
 
@@ -59,7 +59,7 @@ export default function Menu() {
                 shadow-sm
                 transition-all
                 hover:-translate-y-1
-                hover:border-blue-500
+                hover:border-[#1447e6]
                 hover:shadow-lg
                 block
                 cursor-pointer
@@ -74,21 +74,21 @@ export default function Menu() {
                   items-center
                   justify-center
                   rounded-xl
-                  bg-blue-100
-                  text-blue-600
+                  bg-[#dbeafe]
+                  text-[#1447e6]
                   transition-colors
-                  group-hover:bg-blue-600
+                  group-hover:bg-[#1447e6]
                   group-hover:text-white
                 "
               >
                 <Icon size={28} />
               </div>
 
-              <h2 className="text-lg font-semibold text-slate-800">
+              <h2 className="text-lg font-semibold text-[#1d293d]">
                 {item.title}
               </h2>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-[#45556c]">
                 {item.description}
               </p>
             </Link>

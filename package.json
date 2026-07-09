@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "author": "abdelrahman dev",
-  "main": "./electron/main.ts",
+  "main": "dist-electron/electron/main.js",
   "scripts": {
     "frontend": "cd frontend && npm run dev -- -p 3000",
     "electron": "electronmon .",
@@ -17,12 +17,14 @@
     "@libsql/client": "^0.17.3",
     "drizzle-orm": "^0.45.2",
     "electron-store": "^8.2.0",
+    "serve-handler": "^6.1.7",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@electron/rebuild": "^4.0.4",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^25.9.2",
+    "@types/node": "^25.9.5",
+    "@types/serve-handler": "^6.1.4",
     "concurrently": "^10.0.3",
     "drizzle-kit": "^0.31.10",
     "electron": "^22.3.27",
@@ -39,15 +41,28 @@
       "output": "release"
     },
     "files": [
-      "dist-electron/**/*",
-      "frontend/out/**/*",
-      "database/**/*"
+      "dist-electron/**/*"
     ],
     "extraMetadata": {
       "main": "dist-electron/electron/main.js"
     },
+    "extraResources": [
+      {
+        "from": "assets",
+        "to": "assets"
+      },
+      {
+        "from": "frontend/out",
+        "to": "frontend"
+      },
+      {
+        "from": "database/store.db",
+        "to": "database/store.db"
+      }
+    ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "assets/icon.ico"
     }
   }
 }
