@@ -1,3 +1,6 @@
-node_modules/
 package-lock.json
 package.json
+tsconfig.electron.json
+drizzle.config.ts
+dist-electron/
+release/
