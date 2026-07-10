@@ -1,27 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import { Button } from "@/components/ui/button";
-
-import { Input } from "@/components/ui/input";
-
-import { Checkbox } from "@/components/ui/checkbox";
-
-import { Badge } from "@/components/ui/badge";
-
 import { Pencil, Save, Trash2, X } from "lucide-react";
 
+import { Badge, Button, Checkbox, Input } from "../components/ui-lite";
 import {
   getProducts,
   getProductsByCat,
@@ -46,40 +28,22 @@ type Column = {
 
 const COLUMNS: Column[] = [
   { key: "id", label: "المعرف", editable: false, numeric: true },
-
   { key: "name", label: "الاسم", editable: true, numeric: false },
-
   { key: "sku", label: "رمز المنتج", editable: true, numeric: false },
-
   { key: "barcode", label: "الباركود", editable: true, numeric: false },
-
   { key: "quantity", label: "الكمية", editable: true, numeric: true },
-
   { key: "buyPrice", label: "سعر الشراء", editable: true, numeric: true },
-
   { key: "sellPrice", label: "سعر البيع", editable: true, numeric: true },
-
   { key: "brand", label: "العلامة التجارية", editable: true, numeric: false },
-
-  {
-    key: "manufacturer",
-    label: "الشركة المصنعة",
-    editable: true,
-    numeric: false,
-  },
-
+  { key: "manufacturer", label: "الشركة المصنعة", editable: true, numeric: false },
   { key: "carBrand", label: "ماركة السيارة", editable: true, numeric: false },
-
   { key: "carModel", label: "موديل السيارة", editable: true, numeric: false },
-
   { key: "position", label: "الموضع", editable: true, numeric: false },
 ];
 
 function SortIcon({ direction }: { direction: SortDirection }) {
   if (direction === "asc") return <>↑</>;
-
   if (direction === "desc") return <>↓</>;
-
   return <>⇅</>;
 }
 
@@ -102,6 +66,7 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
   const [search, setSearch] = useState("");
 
   const [deleting, setDeleting] = useState(false);
+
   const filteredProducts = products.filter((product) => {
     const term = search.toLowerCase().trim();
 
@@ -110,28 +75,13 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
       product.sku?.toLowerCase().includes(term) ||
       product.brand?.toLowerCase().includes(term) ||
       product.carBrand?.toLowerCase().includes(term) ||
-      product.carModel?.toLowerCase().includes(term) 
+      product.carModel?.toLowerCase().includes(term)
     );
   });
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        let data;
-
-        if (categoryId) {
-          data = await getProductsByCat(categoryId);
-        } else {
-          data = await getProducts();
-        }
-
-        setProducts(data);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
     void loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId]);
 
   async function loadProducts() {
@@ -155,23 +105,14 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
 
     setSort((prev) => {
       if (prev.column !== column) {
-        return {
-          column,
-          direction: "asc",
-        };
+        return { column, direction: "asc" };
       }
 
       if (prev.direction === "asc") {
-        return {
-          column,
-          direction: "desc",
-        };
+        return { column, direction: "desc" };
       }
 
-      return {
-        column: null,
-        direction: null,
-      };
+      return { column: null, direction: null };
     });
   }
 
@@ -179,11 +120,9 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
     if (!sort.column || !sort.direction) return 0;
 
     const aVal = a[sort.column];
-
     const bVal = b[sort.column];
 
     const aNum = Number(aVal);
-
     const bNum = Number(bVal);
 
     if (!isNaN(aNum) && !isNaN(bNum)) {
@@ -191,7 +130,6 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
     }
 
     const aStr = String(aVal ?? "").toLowerCase();
-
     const bStr = String(bVal ?? "").toLowerCase();
 
     if (aStr < bStr) {
@@ -207,17 +145,13 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
 
   function enterEditMode() {
     setEditMode(true);
-
     setEdits({});
-
     setSelected(new Set());
   }
 
   function cancelEdit() {
     setEditMode(false);
-
     setEdits({});
-
     setSelected(new Set());
   }
 
@@ -228,10 +162,8 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
   function handleCellChange(id: number, key: keyof ProductInput, value: string) {
     setEdits((prev) => ({
       ...prev,
-
       [id]: {
         ...prev[id],
-
         [key]: value,
       },
     }));
@@ -275,9 +207,7 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
       await loadProducts();
 
       setEditMode(false);
-
       setEdits({});
-
       setSelected(new Set());
     } catch (err) {
       console.error(err);
@@ -303,7 +233,6 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
   function toggleSelectAll() {
     if (selected.size === filteredProducts.length) {
       setSelected(new Set());
-
       return;
     }
 
@@ -330,20 +259,14 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
 
   return (
     <div className="p-6 text-right">
-      <h1 className="mb-6 text-3xl font-bold">
-        {categoryId ? "منتجات القسم" : "جميع المنتجات"}
-      </h1>
+      <h1 className="mb-6 text-3xl font-bold">{categoryId ? "منتجات القسم" : "جميع المنتجات"}</h1>
 
       <div className="mb-4 flex gap-2">
-        <Input
-          placeholder="Search by name or SKU..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <Input placeholder="Search by name or SKU..." value={search} onChange={(e) => setSearch(e.target.value)} />
 
         {!editMode ? (
           <Button onClick={enterEditMode}>
-            <Pencil className="mr-2 h-4 w-4" />
+            <Pencil className="h-4 w-4" />
             تعديل
           </Button>
         ) : (
@@ -351,100 +274,89 @@ export default function ProductsTable({ categoryId }: { categoryId?: number }) {
             <Badge>تم تعديل {Object.keys(edits).length}</Badge>
 
             {selected.size > 0 && (
-              <Button
-                variant="destructive"
-                onClick={handleDeleteSelected}
-                disabled={deleting}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
+              <Button variant="destructive" onClick={handleDeleteSelected} disabled={deleting}>
+                <Trash2 className="h-4 w-4" />
                 حذف ({selected.size})
               </Button>
             )}
 
             <Button variant="outline" onClick={cancelEdit}>
-              <X className="mr-2 h-4 w-4" />
+              <X className="h-4 w-4" />
               إلغاء
             </Button>
 
             <Button onClick={handleSave} disabled={saving}>
-              <Save className="mr-2 h-4 w-4" />
-
+              <Save className="h-4 w-4" />
               {saving ? "جاري الحفظ..." : "حفظ التغييرات"}
             </Button>
           </>
         )}
       </div>
 
-      <Table>
-        <TableCaption>جدول المنتجات</TableCaption>
+      <div className="overflow-x-auto rounded-lg border">
+        <table className="w-full border-collapse text-sm">
+          <caption className="p-3 text-muted-foreground text-xs">جدول المنتجات</caption>
 
-        <TableHeader>
-          <TableRow>
-            {editMode && (
-              <TableHead>
-                <Checkbox
-                  checked={
-                    products.length > 0 && selected.size === products.length
-                  }
-                  onCheckedChange={toggleSelectAll}
-                />
-              </TableHead>
-            )}
-
-            {COLUMNS.map((col) => (
-              <TableHead key={col.key}>
-                <button disabled={editMode} onClick={() => handleSort(col.key)}>
-                  {col.label}{" "}
-                  {!editMode && (
-                    <SortIcon
-                      direction={
-                        sort.column === col.key ? sort.direction : null
-                      }
-                    />
-                  )}
-                </button>
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {sortedProducts.map((product) => (
-            <TableRow key={product.id}>
+          <thead>
+            <tr className="border-b bg-gray-50">
               {editMode && (
-                <TableCell>
+                <th className="p-3 text-right">
                   <Checkbox
-                    checked={selected.has(product.id)}
-                    onCheckedChange={() => toggleSelect(product.id)}
+                    checked={products.length > 0 && selected.size === products.length}
+                    onCheckedChange={toggleSelectAll}
                   />
-                </TableCell>
+                </th>
               )}
 
-              <TableCell>{product.id}</TableCell>
-
-              {COLUMNS.slice(1).map((col) => (
-                <TableCell key={col.key}>
-                  {editMode ? (
-                    <Input
-                      type={col.numeric ? "number" : "text"}
-                      value={getCellValue(product, col.key as keyof ProductInput)}
-                      onChange={(e) =>
-                        handleCellChange(product.id, col.key as keyof ProductInput, e.target.value)
-                      }
-                    />
-                  ) : col.key === "buyPrice" ? (
-                    `${product.buyPrice ?? 0} EGP`
-                  ) : col.key === "sellPrice" ? (
-                    `${product.sellPrice ?? 0} EGP`
-                  ) : (
-                    (product[col.key] ?? "-")
-                  )}
-                </TableCell>
+              {COLUMNS.map((col) => (
+                <th key={col.key} className="p-3 text-right font-medium">
+                  <button
+                    type="button"
+                    disabled={editMode}
+                    onClick={() => handleSort(col.key)}
+                    className="inline-flex items-center gap-1 disabled:cursor-default"
+                  >
+                    {col.label}{" "}
+                    {!editMode && <SortIcon direction={sort.column === col.key ? sort.direction : null} />}
+                  </button>
+                </th>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            </tr>
+          </thead>
+
+          <tbody>
+            {sortedProducts.map((product) => (
+              <tr key={product.id} className="border-b last:border-0 hover:bg-gray-50">
+                {editMode && (
+                  <td className="p-3">
+                    <Checkbox checked={selected.has(product.id)} onCheckedChange={() => toggleSelect(product.id)} />
+                  </td>
+                )}
+
+                <td className="p-3">{product.id}</td>
+
+                {COLUMNS.slice(1).map((col) => (
+                  <td key={col.key} className="p-3">
+                    {editMode ? (
+                      <Input
+                        type={col.numeric ? "number" : "text"}
+                        value={getCellValue(product, col.key as keyof ProductInput)}
+                        onChange={(e) => handleCellChange(product.id, col.key as keyof ProductInput, e.target.value)}
+                      />
+                    ) : col.key === "buyPrice" ? (
+                      `${product.buyPrice ?? 0} EGP`
+                    ) : col.key === "sellPrice" ? (
+                      `${product.sellPrice ?? 0} EGP`
+                    ) : (
+                      (product[col.key] ?? "-")
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

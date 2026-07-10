@@ -4,10 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, NativeSelect } from "../../components/ui-lite";
 import type { Product } from "@/types/api";
 
 type InvoiceItem = {
@@ -114,15 +111,13 @@ export default function PurchasesPage() {
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <Label>اختيار مورد سريع</Label>
-            <select
-              className="h-10 w-full rounded-md border bg-background px-3"
-              value={supplierName}
-              onChange={(event) => setSupplierName(event.target.value)}
-            >
+            <NativeSelect value={supplierName} onChange={setSupplierName}>
               {suppliers.map((supplier) => (
-                <option key={supplier} value={supplier}>{supplier}</option>
+                <option key={supplier} value={supplier}>
+                  {supplier}
+                </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
 
           <div className="space-y-2">
@@ -144,11 +139,10 @@ export default function PurchasesPage() {
               <div key={item.id} className="grid gap-3 rounded-xl border p-4 md:grid-cols-[2fr_1fr_1fr_1fr_auto]">
                 <div className="space-y-2">
                   <Label>المنتج {index + 1}</Label>
-                  <select
-                    className="h-10 w-full rounded-md border bg-background px-3"
+                  <NativeSelect
                     value={item.productId ?? ""}
-                    onChange={(event) => {
-                      const productId = Number(event.target.value) || null;
+                    onChange={(value) => {
+                      const productId = Number(value) || null;
                       const product = products.find((entry) => entry.id === productId);
                       updateItem(item.id, {
                         productId,
@@ -162,7 +156,7 @@ export default function PurchasesPage() {
                         {product.name} - {product.sku}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
 
                 <div className="space-y-2">

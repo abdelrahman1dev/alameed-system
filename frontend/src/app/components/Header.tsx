@@ -44,19 +44,19 @@ export default function Header() {
       "
     >
       <div className="flex items-center gap-3">
-        <div className="rounded-xl bg-white/15 p-2">
+        <div className="rounded-xl bg-[#b4b4b4] p-2">
           <Car
-            className="text-primary"
+            className="text-white"
             size={28}
           />
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-primary">
+          <h1 className="text-2xl font-bold text-white">
             مركز العميد
           </h1>
 
-          <p className="text-sm text-opacity">
+          <p className="text-sm text-white">
             نظام إدارة قطع غيار السيارات
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function Header() {
 
       <div className="flex items-center gap-3">
         <div className="hidden md:block">
-          <p className="text-sm text-opacity">
+          <p className="text-sm text-white">
             {new Date().toLocaleDateString(
               "ar-EG"
             )}

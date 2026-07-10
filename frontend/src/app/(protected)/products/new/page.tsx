@@ -4,11 +4,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  NativeSelect,
+  Textarea,
+} from "../../../components/ui-lite";
 import type { Category, ProductInput } from "@/types/api";
 
 const initialForm: ProductInput = {
@@ -91,29 +97,53 @@ export default function NewProductPage() {
               <Field label="اسم المنتج" value={form.name} onChange={(value) => updateField("name", value)} required />
               <Field label="SKU" value={form.sku} onChange={(value) => updateField("sku", value)} required />
               <Field label="الباركود" value={form.barcode ?? ""} onChange={(value) => updateField("barcode", value)} />
-              <Field label="الكمية" type="number" value={form.quantity} onChange={(value) => updateField("quantity", Number(value))} />
-              <Field label="سعر الشراء" type="number" value={form.buyPrice} onChange={(value) => updateField("buyPrice", Number(value))} />
-              <Field label="سعر البيع" type="number" value={form.sellPrice} onChange={(value) => updateField("sellPrice", Number(value))} />
+              <Field
+                label="الكمية"
+                type="number"
+                value={form.quantity}
+                onChange={(value) => updateField("quantity", Number(value))}
+              />
+              <Field
+                label="سعر الشراء"
+                type="number"
+                value={form.buyPrice}
+                onChange={(value) => updateField("buyPrice", Number(value))}
+              />
+              <Field
+                label="سعر البيع"
+                type="number"
+                value={form.sellPrice}
+                onChange={(value) => updateField("sellPrice", Number(value))}
+              />
               <Field label="الماركة" value={form.brand ?? ""} onChange={(value) => updateField("brand", value)} />
-              <Field label="الشركة المصنعة" value={form.manufacturer ?? ""} onChange={(value) => updateField("manufacturer", value)} />
+              <Field
+                label="الشركة المصنعة"
+                value={form.manufacturer ?? ""}
+                onChange={(value) => updateField("manufacturer", value)}
+              />
               <Field label="ماركة السيارة" value={form.carBrand ?? ""} onChange={(value) => updateField("carBrand", value)} />
               <Field label="موديل السيارة" value={form.carModel ?? ""} onChange={(value) => updateField("carModel", value)} />
               <Field label="المكان" value={form.position ?? ""} onChange={(value) => updateField("position", value)} />
               <Field label="رقم OEM" value={form.oemNumber ?? ""} onChange={(value) => updateField("oemNumber", value)} />
-              <Field label="رقم بديل" value={form.alternateNumber ?? ""} onChange={(value) => updateField("alternateNumber", value)} />
+              <Field
+                label="رقم بديل"
+                value={form.alternateNumber ?? ""}
+                onChange={(value) => updateField("alternateNumber", value)}
+              />
 
               <div className="space-y-2">
                 <Label>التصنيف</Label>
-                <select
-                  className="h-10 w-full rounded-md border bg-background px-3"
+                <NativeSelect
                   value={form.categoryId ?? ""}
-                  onChange={(event) => updateField("categoryId", Number(event.target.value) || null)}
+                  onChange={(value) => updateField("categoryId", Number(value) || null)}
                 >
                   <option value="">بدون تصنيف</option>
                   {categories.map((category) => (
-                    <option key={category.id} value={category.id}>{category.name}</option>
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
             </div>
 
@@ -151,7 +181,12 @@ function Field({
         {label}
         {required && <span className="text-destructive"> *</span>}
       </Label>
-      <Input type={type} min={type === "number" ? 0 : undefined} value={value} onChange={(event) => onChange(event.target.value)} />
+      <Input
+        type={type}
+        min={type === "number" ? 0 : undefined}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      />
     </div>
   );
 }

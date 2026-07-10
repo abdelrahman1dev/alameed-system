@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import type { Category } from "@/types/api";
 
@@ -50,18 +48,18 @@ export default function Page() {
     <div className="p-8">
       <div className="mb-8 flex items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">التصنيفات</h1>
-        <Button asChild>
+        <button >
           <Link href="/products/new">إضافة منتج</Link>
-        </Button>
+        </button>
       </div>
 
       <div className="mb-6 flex gap-2">
-        <Input
+        <input
           placeholder="اسم تصنيف جديد"
           value={newCategory}
           onChange={(event) => setNewCategory(event.target.value)}
         />
-        <Button onClick={handleCreateCategory}>إضافة تصنيف</Button>
+        <button onClick={handleCreateCategory}>إضافة تصنيف</button>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">

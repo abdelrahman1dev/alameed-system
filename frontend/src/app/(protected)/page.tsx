@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AlertTriangle, Package, ShoppingCart, Truck } from "lucide-react";
 import { toast } from "sonner";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui-lite";
 import type { DashboardStats } from "@/types/api";
 import Menu from "./sections/Menu";
 
@@ -53,7 +53,11 @@ export default function Home() {
               <p className="text-muted-foreground">لا توجد منتجات منخفضة المخزون.</p>
             ) : (
               stats.lowStockProducts.map((product) => (
-                <Link key={product.id} href="/products/allProd" className="flex justify-between rounded-lg border p-3 hover:bg-muted">
+                <Link
+                  key={product.id}
+                  href="/products/allProd"
+                  className="flex justify-between rounded-lg border p-3 hover:bg-muted"
+                >
                   <span>{product.name}</span>
                   <span className="font-semibold">{product.quantity}</span>
                 </Link>
@@ -67,8 +71,16 @@ export default function Home() {
             <CardTitle>آخر النشاط</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {[...stats.recentSales.map((sale) => ({ label: `بيع إلى ${sale.customerName ?? "عميل نقدي"}`, amount: sale.totalAmount })),
-              ...stats.recentPurchases.map((purchase) => ({ label: `شراء من ${purchase.supplierName}`, amount: purchase.totalAmount }))]
+            {[
+              ...stats.recentSales.map((sale) => ({
+                label: `بيع إلى ${sale.customerName ?? "عميل نقدي"}`,
+                amount: sale.totalAmount,
+              })),
+              ...stats.recentPurchases.map((purchase) => ({
+                label: `شراء من ${purchase.supplierName}`,
+                amount: purchase.totalAmount,
+              })),
+            ]
               .slice(0, 6)
               .map((activity, index) => (
                 <div key={`${activity.label}-${index}`} className="flex justify-between rounded-lg border p-3">
