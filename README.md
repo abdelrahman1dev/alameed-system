@@ -95,7 +95,7 @@ alameed/
 Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/alameed.git
+git clone https://github.com/abdelrahman1dev/alameed-system.git
 ```
 
 Install dependencies
