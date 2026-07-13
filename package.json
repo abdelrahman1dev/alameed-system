@@ -8,15 +8,19 @@
   "scripts": {
     "frontend": "cd frontend && npm run dev -- -p 3000",
     "electron": "electronmon .",
-    "dev": "concurrently \"npm run frontend\" \"wait-on http://localhost:3000 && npm run electron\"",
+    "dev": "concurrently \"npm run frontend\" \"npm run electron:watch\" \"wait-on http://localhost:3000 && npm run electron\"",
     "frontend:build": "cd frontend && npm run build",
     "electron:build": "tsc -p tsconfig.electron.json",
-    "dist": "npm run frontend:build && npm run electron:build && electron-builder"
+    "dist": "npm run frontend:build && npm run electron:build && electron-builder --x64 --ia32",
+    "dist:x64": "npm run frontend:build && npm run electron:build && electron-builder --x64",
+    "dist:ia32": "npm run frontend:build && npm run electron:build && electron-builder --ia32",
+    "electron:watch": "tsc -p tsconfig.electron.json --watch"
   },
   "dependencies": {
     "@libsql/client": "^0.17.3",
     "drizzle-orm": "^0.45.2",
     "electron-store": "^8.2.0",
+    "exceljs": "^4.4.0",
     "serve-handler": "^6.1.7",
     "zustand": "^5.0.14"
   },
@@ -36,6 +40,7 @@
   },
   "build": {
     "appId": "com.elameed.system",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
     "productName": "Elameed System",
     "directories": {
       "output": "release"

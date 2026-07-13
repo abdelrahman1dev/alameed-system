@@ -54,7 +54,7 @@ return (
           </label>
 
           <input
-            type="password"
+            type="text"
             onChange={(e) => setUsername(e.target.value)}
             placeholder="اسم المستخدم"
             className="w-full rounded-lg border border-[#cad5e2] px-4 py-3 outline-none transition focus:border-foreground focus:ring-2 focus:ring-blue-600/20"
@@ -66,7 +66,7 @@ return (
           </label>
 
           <input
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="أدخل كلمة المرور"

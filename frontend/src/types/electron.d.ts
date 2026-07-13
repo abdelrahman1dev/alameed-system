@@ -3,12 +3,18 @@ export { };
 import type {
   Category,
   DashboardStats,
+  InventoryMovement,
+  InventoryReport,
   Product,
   ProductInput,
   Purchase,
+  PurchaseHistory,
   PurchaseInput,
   PurchaseItemInput,
+  ReportFilters,
+  ReportsDashboard,
   Sale,
+  SaleHistory,
   SaleInput,
   SaleItemInput,
   UserSession,
@@ -21,6 +27,7 @@ declare global {
 
       products: {
         getAll: () => Promise<Product[]>;
+        export: () => Promise;
         create: (data: ProductInput) => Promise<Product>;
         update: (id: number, data: Partial<ProductInput>) => Promise<Product | null>;
         delete: (id: number) => Promise<Product | null>;
@@ -59,6 +66,28 @@ declare global {
       dashboard: {
         getStats: () => Promise<DashboardStats>;
       };
+      reports: {
+
+        getDashboard(
+          filters?: ReportFilters,
+        ): Promise<ReportsDashboard>;
+
+        getInventory():
+          Promise<InventoryReport[]>;
+
+        getMovements():
+          Promise<InventoryMovement[]>;
+
+        getSalesHistory():
+          Promise<SaleHistory[]>;
+
+        getPurchaseHistory():
+          Promise<PurchaseHistory[]>;
+      },
+      backup: {
+        create: () => Promise;
+        restore: () => Promise;
+      }
     };
   }
 }

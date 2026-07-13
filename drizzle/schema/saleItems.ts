@@ -12,11 +12,15 @@ export const saleItems = sqliteTable('sale_items', {
 
   saleId: integer('sale_id')
     .notNull()
-    .references(() => sales.id),
+    .references(() => sales.id , {
+      onDelete: 'cascade',
+    }),
 
   productId: integer('product_id')
     .notNull()
-    .references(() => products.id),
+    .references(() => products.id , {
+      onDelete: 'cascade',
+    }),
 
   quantity: integer('quantity').notNull(),
 

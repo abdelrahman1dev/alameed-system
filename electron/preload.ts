@@ -7,7 +7,8 @@ contextBridge.exposeInMainWorld("api", {
     create: (data: Record<string, unknown>) => ipcRenderer.invoke("products:create", data),
     update: (id: string | number, data: Record<string, unknown>) => ipcRenderer.invoke("products:update", id, data),
     delete: (id: string | number) => ipcRenderer.invoke("products:delete", id),
-    getByCategory: (id: string | number) => ipcRenderer.invoke("products:getByCategory", id)
+    getByCategory: (id: string | number) => ipcRenderer.invoke("products:getByCategory", id),
+    export: () => ipcRenderer.invoke("products:export"),
   },
   purchases: {
     getAll: () => ipcRenderer.invoke("purchases:getAll"),
@@ -35,5 +36,38 @@ contextBridge.exposeInMainWorld("api", {
   },
   dashboard: {
     getStats: () => ipcRenderer.invoke("dashboard:getStats"),
-  }
+  },
+  reports: {
+
+    getDashboard: (filters: any) =>
+      ipcRenderer.invoke(
+        "reports:getDashboard",
+        filters,
+      ),
+
+    getInventory: () =>
+      ipcRenderer.invoke(
+        "reports:getInventory",
+      ),
+
+    getMovements: () =>
+      ipcRenderer.invoke(
+        "reports:getMovements",
+      ),
+
+    getSalesHistory: () =>
+      ipcRenderer.invoke(
+        "reports:getSalesHistory",
+      ),
+
+    getPurchaseHistory: () =>
+      ipcRenderer.invoke(
+        "reports:getPurchaseHistory",
+      ),
+
+  },
+  backup: {
+    create: () => ipcRenderer.invoke("backup:create"),
+    restore: () => ipcRenderer.invoke("backup:restore"),
+},
 });

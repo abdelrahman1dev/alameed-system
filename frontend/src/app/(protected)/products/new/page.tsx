@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -55,6 +54,8 @@ export default function NewProductPage() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    console.log("Submit clicked");
 
     if (!form.name.trim() || !form.sku.trim()) {
       toast.error("اسم المنتج و SKU مطلوبان");
@@ -151,10 +152,14 @@ export default function NewProductPage() {
               <Label>ملاحظات</Label>
               <Textarea value={form.notes ?? ""} onChange={(event) => updateField("notes", event.target.value)} />
             </div>
-
-            <Button className="w-full" disabled={saving}>
+            <button
+              type="submit"
+              disabled={saving}
+              className="w-full rounded bg-blue-600 p-2 text-white disabled:opacity-50"
+            >
               {saving ? "جاري الحفظ..." : "حفظ المنتج"}
-            </Button>
+
+            </button>
           </form>
         </CardContent>
       </Card>

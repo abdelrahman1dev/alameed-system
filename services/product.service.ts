@@ -1,6 +1,7 @@
 import { db } from './../drizzle/db';
 import { products } from './../drizzle/schema/index';
 import { eq } from 'drizzle-orm';
+import { exportToExcel } from "./export.service";
 
 export async function getAllProducts() {
   return await db.select().from(products);
@@ -14,6 +15,7 @@ export async function getProductById(id: number) {
 
   return product[0] ?? null;
 }
+
 
 
 export async function getProductsByCat(id: number) {
@@ -54,4 +56,14 @@ export async function deleteProduct(id: number) {
     .returning();
 
   return result[0] ?? null;
+}
+
+export async function exportProducts() {
+  const data = await db.select().from(products);
+
+  await exportToExcel(
+    "Products",
+    "Products",
+    data,
+  );
 }

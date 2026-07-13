@@ -4,7 +4,8 @@ import {
   updateProduct,
   createProduct,
   deleteProduct,
-  getProductsByCat
+  getProductsByCat,
+  exportProducts
 } from "../services/product.service";
 import path from "node:path";
 import { createSale } from "../services/sale.service";
@@ -19,7 +20,15 @@ import { getDashboardStats } from "../services/dashboard.service";
 
 import { store } from "./store";
 import http from "node:http";
+import { Menu } from "electron";
 import handler from "serve-handler";
+
+import { getReportsDashboard } from "../services/reports.service";
+import { getInventoryMovements } from "../services/reports/movments";
+import { getInventoryReport } from "../services/reports/inventory";
+import { getSalesHistory } from "../services/reports/sales";
+import { getPurchaseHistory } from "../services/reports/purchase";
+import { createBackup ,restoreBackup } from "../services/backup.service";
 
 let server: http.Server;
 
@@ -56,6 +65,7 @@ function createWindow(url: string) {
     width: 1920,
     height: 1080,
     icon: path.join(__dirname, "../../assets/icon.ico"),
+    autoHideMenuBar: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -63,7 +73,58 @@ function createWindow(url: string) {
   });
 
   win.loadURL(url);
+  win.setMenuBarVisibility(true);
 }
+
+
+const menu = Menu.buildFromTemplate([
+  {
+    label: "File",
+    submenu: [
+      { role: "quit" }
+    ]
+  },
+  {
+    label: "Edit",
+    submenu: [
+      { role: "undo" },
+      { role: "redo" },
+      { type: "separator" },
+      { role: "cut" },
+      { role: "copy" },
+      { role: "paste" },
+      { role: "selectAll" }
+    ]
+  },
+  {
+    label: "View",
+    submenu: [
+      { role: "reload" },
+      { role: "forceReload" },
+      { role: "toggleDevTools" },
+      { type: "separator" },
+      { role: "resetZoom" },
+      { role: "zoomIn" },
+      { role: "zoomOut" },
+      { role: "togglefullscreen" }
+    ]
+  },
+  {
+    label: "Window",
+    submenu: [
+      { role: "minimize" },
+      { role: "close" }
+    ]
+  },
+  {
+    label: "Help",
+    submenu: []
+  }
+]);
+
+Menu.setApplicationMenu(menu);
+
+
 
 
 app.whenReady().then(() => {
@@ -276,3 +337,46 @@ ipcMain.handle("dashboard:getStats", async () => {
 
   return await getDashboardStats();
 });
+
+
+ipcMain.handle(
+  "reports:getDashboard",
+  async (_, filters) => {
+    return await getReportsDashboard(filters);
+  },
+);
+
+ipcMain.handle(
+  "reports:getInventory",
+  async () => {
+    return await getInventoryReport();
+  },
+);
+
+ipcMain.handle(
+  "reports:getMovements",
+  async () => {
+    return await getInventoryMovements();
+  },
+);
+
+ipcMain.handle(
+  "reports:getSalesHistory",
+  async () => {
+    return await getSalesHistory();
+  },
+);
+
+ipcMain.handle(
+  "reports:getPurchaseHistory",
+  async () => {
+    return await getPurchaseHistory();
+  },
+);
+
+ipcMain.handle(
+  "products:export",
+  exportProducts,
+);
+ipcMain.handle("backup:create", createBackup);
+ipcMain.handle("backup:restore", restoreBackup);

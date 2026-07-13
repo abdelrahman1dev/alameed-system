@@ -59,7 +59,7 @@ export default function Page() {
           value={newCategory}
           onChange={(event) => setNewCategory(event.target.value)}
         />
-        <button onClick={handleCreateCategory}>إضافة تصنيف</button>
+        <button onClick={handleCreateCategory} disabled={newCategory.length < 1} className="disabled:opacity-50">إضافة تصنيف</button>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
